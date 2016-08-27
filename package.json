@@ -50,7 +50,7 @@
     "loader-utils": "^0.2.15",
     "lodash": "^4.15.0",
     "postcss": "^5.1.2",
-    "postcss-scss": "^0.1.9",
+    "postcss-scss": "^0.2.1",
     "postcss-smart-import": "^0.2.6",
     "read-package-json": "^2.0.4",
     "rollup": "^0.34.10",
