@@ -64,9 +64,9 @@
     "rollup-plugin-yaml": "^1.1.0"
   },
   "devDependencies": {
-    "file-loader": "^1.1.4",
+    "file-loader": "^1.1.5",
     "readable-code": "^3.4.14",
     "rimraf": "^2.6.2",
-    "webpack": "^3.6.0"
+    "webpack": "^3.7.1"
   }
 }
