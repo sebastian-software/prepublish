@@ -15,13 +15,17 @@ module.exports = {
   },
   module: {
     rules: [{
-      test: /\.(svg|css)$/,
+      test: /\.(svg|woff)$/,
       use: {
         loader: "file-loader",
         options: {
           name: "[name].[ext]"
         }
       }
+    },
+    {
+      test: /\.(css|sss|scss|sass)$/,
+      use: [ 'style-loader', 'css-loader' ]
     }]
   }
 }

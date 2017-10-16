@@ -4,3 +4,7 @@ $color: green;
   color: $color;
   font-weight: light;
 }
+
+.font {
+  src: url("./sourcesanspro.woff") format("woff");
+}
