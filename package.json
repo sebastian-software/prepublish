@@ -52,6 +52,7 @@
     "loader-utils": "^1.1.0",
     "lodash": "^4.17.4",
     "meow": "^3.7.0",
+    "nodent-runtime": "^3.0.4",
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-buble": "^0.16.0",
