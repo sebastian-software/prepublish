@@ -25,8 +25,8 @@ var cache
 
 /* eslint-disable no-console */
 
-
-const command = meow(`
+const command = meow(
+  `
   Usage
     $ prepublish
 
@@ -44,33 +44,56 @@ const command = meow(`
 
     -v, --verbose      Verbose output mode [default = false]
     -q, --quiet        Quiet output mode [default = false]
-`, {
-    default: {
-      inputNode: null,
-      inputWeb: null,
-      inputBinary: null,
+`,
+  {
+    flags: {
+      inputNode: {
+        default: null
+      },
 
-      outputFolder: null,
+      inputWeb: {
+        default: null
+      },
 
-      transpiler: "babel",
-      minified: false,
-      sourcemap: true,
-      targetUnstable: false,
+      inputBinary: {
+        default: null
+      },
 
-      verbose: false,
-      quiet: false
-    },
+      outputFolder: {
+        default: null
+      },
 
-    alias: {
-      t: "transpiler",
-      x: "minified",
-      m: "sourcemap",
-      v: "verbose",
-      q: "quiet"
+      transpiler: {
+        default: "babel",
+        alias: "t"
+      },
+
+      minified: {
+        default: false,
+        alias: "x"
+      },
+
+      sourcemap: {
+        default: true,
+        alias: "m"
+      },
+
+      targetUnstable: {
+        default: false
+      },
+
+      verbose: {
+        default: false,
+        alias: "v"
+      },
+
+      quiet: {
+        default: false,
+        alias: "q"
+      }
     }
   }
 )
-
 
 const verbose = command.flags.verbose
 const quiet = command.flags.quiet
@@ -94,11 +117,13 @@ if (binaryConfig) {
 const outputFileMatrix = {
   // NodeJS Classic Target
   "node-classic-commonjs": PKG_CONFIG["main"] || null,
-  "node-classic-esmodule": PKG_CONFIG["module"] || PKG_CONFIG["jsnext:main"] || null,
+  "node-classic-esmodule":
+    PKG_CONFIG["module"] || PKG_CONFIG["jsnext:main"] || null,
 
   // NodeJS ES2015 Target
   "node-es2015-commonjs": PKG_CONFIG["main:es2015"] || null,
-  "node-es2015-esmodule": PKG_CONFIG["es2015"] || PKG_CONFIG["module:es2015"] || null,
+  "node-es2015-esmodule":
+    PKG_CONFIG["es2015"] || PKG_CONFIG["module:es2015"] || null,
 
   // NodeJS Modern Target
   "node-modern-commonjs": PKG_CONFIG["main:modern"] || null,
@@ -108,10 +133,12 @@ const outputFileMatrix = {
   "web-classic-esmodule": PKG_CONFIG["web"] || PKG_CONFIG["browser"] || null,
 
   // Browser ES2015 Target
-  "web-es2015-esmodule": PKG_CONFIG["web:es2015"] || PKG_CONFIG["browser:es2015"] || null,
+  "web-es2015-esmodule":
+    PKG_CONFIG["web:es2015"] || PKG_CONFIG["browser:es2015"] || null,
 
   // Browser Modern Target
-  "web-modern-esmodule": PKG_CONFIG["web:modern"] || PKG_CONFIG["browser:modern"] || null,
+  "web-modern-esmodule":
+    PKG_CONFIG["web:modern"] || PKG_CONFIG["browser:modern"] || null,
 
   // Binary Target
   "binary-binary-commonjs": binaryOutput || null
@@ -119,18 +146,36 @@ const outputFileMatrix = {
 
 const outputFolder = command.flags.outputFolder
 if (outputFolder) {
-  outputFileMatrix["node-classic-commonjs"] = `${outputFolder}/node.classic.commonjs.js`
-  outputFileMatrix["node-classic-esmodule"] = `${outputFolder}/node.classic.esmodule.js`
+  outputFileMatrix[
+    "node-classic-commonjs"
+  ] = `${outputFolder}/node.classic.commonjs.js`
+  outputFileMatrix[
+    "node-classic-esmodule"
+  ] = `${outputFolder}/node.classic.esmodule.js`
 
-  outputFileMatrix["node-es2015-commonjs"] = `${outputFolder}/node.es2015.commonjs.js`
-  outputFileMatrix["node-es2015-esmodule"] = `${outputFolder}/node.es2015.esmodule.js`
+  outputFileMatrix[
+    "node-es2015-commonjs"
+  ] = `${outputFolder}/node.es2015.commonjs.js`
+  outputFileMatrix[
+    "node-es2015-esmodule"
+  ] = `${outputFolder}/node.es2015.esmodule.js`
 
-  outputFileMatrix["node-modern-commonjs"] = `${outputFolder}/node.modern.commonjs.js`
-  outputFileMatrix["node-modern-esmodule"] = `${outputFolder}/node.modern.esmodule.js`
+  outputFileMatrix[
+    "node-modern-commonjs"
+  ] = `${outputFolder}/node.modern.commonjs.js`
+  outputFileMatrix[
+    "node-modern-esmodule"
+  ] = `${outputFolder}/node.modern.esmodule.js`
 
-  outputFileMatrix["web-classic-esmodule"] = `${outputFolder}/web.classic.esmodule.js`
-  outputFileMatrix["web-es2015-esmodule"] = `${outputFolder}/web.es2015.esmodule.js`
-  outputFileMatrix["web-modern-esmodule"] = `${outputFolder}/web.modern.esmodule.js`
+  outputFileMatrix[
+    "web-classic-esmodule"
+  ] = `${outputFolder}/web.classic.esmodule.js`
+  outputFileMatrix[
+    "web-es2015-esmodule"
+  ] = `${outputFolder}/web.es2015.esmodule.js`
+  outputFileMatrix[
+    "web-modern-esmodule"
+  ] = `${outputFolder}/web.modern.esmodule.js`
 }
 
 // Rollups support these formats: 'amd', 'cjs', 'es', 'iife', 'umd'
@@ -142,10 +187,10 @@ const format2Rollup = {
 const name = PKG_CONFIG.name || camelCase(PKG_CONFIG.name)
 const banner = getBanner(PKG_CONFIG)
 const targets = {}
-const formats = [ "esmodule", "commonjs" ]
+const formats = ["esmodule", "commonjs"]
 
 if (command.flags.inputNode) {
-  targets.node = [ command.flags.inputNode ]
+  targets.node = [command.flags.inputNode]
 } else {
   targets.node = [
     "src/node/public.js",
@@ -164,7 +209,7 @@ if (command.flags.inputNode) {
 }
 
 if (command.flags.inputWeb) {
-  targets.web = [ command.flags.inputWeb ]
+  targets.web = [command.flags.inputWeb]
 } else {
   targets.web = [
     "src/web/public.js",
@@ -182,53 +227,61 @@ if (command.flags.inputWeb) {
 }
 
 if (command.flags.inputBinary) {
-  targets.binary = [ command.flags.inputBinary ]
+  targets.binary = [command.flags.inputBinary]
 } else {
-  targets.binary = [
-    "src/binary.js",
-    "src/script.js"
-  ]
+  targets.binary = ["src/binary.js", "src/script.js"]
 }
 
 /* eslint-disable max-params */
 try {
-  eachOfSeries(targets, (envInputs, targetId, envCallback) =>
-  {
+  eachOfSeries(targets, (envInputs, targetId, envCallback) => {
     var input = lookupBest(envInputs)
-    if (input)
-    {
+    if (input) {
       if (!quiet) {
-        console.log(`Using input ${chalk.blue(input)} for target ${chalk.blue(targetId)}`)
+        console.log(
+          `Using input ${chalk.blue(input)} for target ${chalk.blue(targetId)}`
+        )
       }
 
-      eachOfSeries(formats, (format, formatIndex, formatCallback) =>
-      {
-        const transpilers = getTranspilers(command.flags.transpiler, {
-          minified: command.flags.minified,
-          presets: [],
-          plugins: [],
-          targetUnstable
-        })
+      eachOfSeries(
+        formats,
+        (format, formatIndex, formatCallback) => {
+          const transpilers = getTranspilers(command.flags.transpiler, {
+            minified: command.flags.minified,
+            presets: [],
+            plugins: [],
+            targetUnstable
+          })
 
-        eachOfSeries(transpilers, (currentTranspiler, transpilerId, variantCallback) =>
-        {
-          var outputFile = outputFileMatrix[`${targetId}-${transpilerId}-${format}`]
-          if (outputFile) {
-            return bundleTo({ input, targetId, transpilerId, currentTranspiler, format, outputFile, variantCallback })
-          } else {
-            return variantCallback(null)
-          }
-        }, formatCallback)
-      }, envCallback)
-    }
-    else
-    {
+          eachOfSeries(
+            transpilers,
+            (currentTranspiler, transpilerId, variantCallback) => {
+              var outputFile =
+                outputFileMatrix[`${targetId}-${transpilerId}-${format}`]
+              if (outputFile) {
+                return bundleTo({
+                  input,
+                  targetId,
+                  transpilerId,
+                  currentTranspiler,
+                  format,
+                  outputFile,
+                  variantCallback
+                })
+              } else {
+                return variantCallback(null)
+              }
+            },
+            formatCallback
+          )
+        },
+        envCallback
+      )
+    } else {
       envCallback(null)
     }
   })
-}
-catch (error)
-{
+} catch (error) {
   /* eslint-disable no-process-exit */
   console.error(error)
   process.exit(1)
@@ -239,10 +292,24 @@ function lookupBest(candidates) {
   return filtered[0]
 }
 
-function bundleTo({ input, targetId, transpilerId, currentTranspiler, format, outputFile, variantCallback }) {
+function bundleTo({
+  input,
+  targetId,
+  transpilerId,
+  currentTranspiler,
+  format,
+  outputFile,
+  variantCallback
+}) {
   if (!quiet) {
     /* eslint-disable max-len */
-    console.log(`${chalk.green(">>> Bundling")} ${chalk.magenta(PKG_CONFIG.name)}-${chalk.magenta(PKG_CONFIG.version)} as ${chalk.blue(transpilerId)} defined as ${chalk.blue(format)} to ${chalk.green(outputFile)}...`)
+    console.log(
+      `${chalk.green(">>> Bundling")} ${chalk.magenta(
+        PKG_CONFIG.name
+      )}-${chalk.magenta(PKG_CONFIG.version)} as ${chalk.blue(
+        transpilerId
+      )} defined as ${chalk.blue(format)} to ${chalk.green(outputFile)}...`
+    )
   }
 
   var prefix = "process.env."
@@ -256,11 +323,10 @@ function bundleTo({ input, targetId, transpilerId, currentTranspiler, format, ou
   return rollup({
     input,
     cache,
-    onwarn: (error) => {
+    onwarn: error => {
       console.warn(chalk.red("  - " + error.message))
     },
-    external(dependency)
-    {
+    external(dependency) {
       if (dependency == input) {
         return false
       }
@@ -276,10 +342,9 @@ function bundleTo({ input, targetId, transpilerId, currentTranspiler, format, ou
 
       return dependency.charAt(0) !== "."
     },
-    plugins:
-    [
+    plugins: [
       nodeResolve({
-        extensions: [ ".mjs", ".js", ".jsx", ".ts", ".tsx", ".json" ],
+        extensions: [".mjs", ".js", ".jsx", ".ts", ".tsx", ".json"],
         jsnext: true,
         module: true,
         main: true
@@ -295,20 +360,20 @@ function bundleTo({ input, targetId, transpilerId, currentTranspiler, format, ou
       transpilerId === "binary" ? executablePlugin() : null
     ].filter(Boolean)
   })
-    .then((bundle) =>
+    .then(bundle =>
       bundle.write({
         format: format2Rollup[format],
         name,
-        banner: transpilerId === "binary" ? `#!/usr/bin/env node\n\n${banner}` : banner,
+        banner:
+          transpilerId === "binary"
+            ? `#!/usr/bin/env node\n\n${banner}`
+            : banner,
         sourcemap: command.flags.sourcemap,
         file: outputFile
       })
     )
-    .then(() =>
-      variantCallback(null)
-    )
-    .catch((error) =>
-    {
+    .then(() => variantCallback(null))
+    .catch(error => {
       console.error(error)
       variantCallback(`Error during bundling ${format}: ${error}`)
     })
