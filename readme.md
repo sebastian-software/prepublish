@@ -89,6 +89,7 @@ The files are looked up for an order. The first match is being used.
 
 ### Sources for binary targets
 
+- `src/cli.js`
 - `src/binary.js`
 - `src/script.js`
 
@@ -132,6 +133,7 @@ This generates a `mypackage` binary which is generated from the matching source 
 
 Binaries are generally generated from one of these source files:
 
+- `src/cli.js`
 - `src/binary.js`
 - `src/script.js`
 
@@ -178,8 +180,7 @@ $ yarn add --dev prepublish
 
 ## Usage
 
-*Prepublish* comes with a binary which can be called from within your `scripts` section
-in the `package.json` file.
+*Prepublish* comes with a binary which can be called from within your `scripts` section in the `package.json` file.
 
 ```json
 "scripts": {
