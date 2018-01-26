@@ -148,11 +148,11 @@ Example Configuration:
 }
 ```
 
-### NodeJS v8 Binaries
+### Choosing NodeJS v8 Binaries
 
-There is a new option to explicitely target Node v8 when generating binaries. This is controlled via a new command line argument:
+There is a new option to explicitely target Node v8 when generating binaries. This is controlled via the following command line argument:
 
-Use `prepublish --target-unstable` together with the "bin" entry seen before.
+Use `prepublish --target-modern` together with the `bin` entry for `package.json` as seen before.
 
 
 
@@ -204,7 +204,7 @@ Options
   -t, --transpiler   Chose the transpiler to use. Either "babel" or "buble". [default = babel]
   -x, --minified     Enabled minification of output files
   -m, --sourcemap    Create a source map file during processing
-  --target-unstable  Binaries should target the upcoming major version of NodeJS instead of LTS
+  --target-modern    Binaries should target Node v8 LTS instead of Node v6 LTS.
 
   -v, --verbose      Verbose output mode [default = false]
   -q, --quiet        Quiet output mode [default = false]
