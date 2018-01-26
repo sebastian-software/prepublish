@@ -11,10 +11,10 @@ export default {
   output: {
     file: "bin/prepublish",
     format: "cjs",
-    sourcemap: true
+    sourcemap: true,
+    banner: "#!/usr/bin/env node\n"
   },
   external,
-  banner: "#!/usr/bin/env node\n",
   plugins: [
     json(),
     buble({
