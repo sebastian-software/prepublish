@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.28.9",
+    "eslint-config-readable": "^1.10.2",
     "file-loader": "^1.1.6",
     "release-it": "^7.0.2",
     "rimraf": "^2.6.2",
