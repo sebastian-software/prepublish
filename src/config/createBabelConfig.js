@@ -4,40 +4,58 @@ import presetEdge from "babel-preset-edge"
 const DEBUG_PRESETS = false
 
 /* eslint-disable max-params */
-export function createHelper({ mode = "classic", minified = false, presets = [], plugins = [], targetModern = false }) {
+export function createHelper({
+  mode = "classic",
+  minified = false,
+  presets = [],
+  plugins = [],
+  targetModern = false
+}) {
   const additionalPlugins = plugins.concat()
   const additionalPresets = presets.concat()
 
   let selectedPreset
   if (mode === "modern") {
-    selectedPreset = [ presetEdge, {
-      target: "modern",
-      env: "production",
-      compression: minified,
-      debug: DEBUG_PRESETS
-    }]
+    selectedPreset = [
+      presetEdge,
+      {
+        target: "modern",
+        env: "production",
+        compression: minified,
+        debug: DEBUG_PRESETS
+      }
+    ]
   } else if (mode === "es2015") {
-    selectedPreset = [ presetEdge, {
-      target: "es2015",
-      env: "production",
-      compression: minified,
-      debug: DEBUG_PRESETS
-    }]
+    selectedPreset = [
+      presetEdge,
+      {
+        target: "es2015",
+        env: "production",
+        compression: minified,
+        debug: DEBUG_PRESETS
+      }
+    ]
   } else if (mode === "binary") {
-    selectedPreset = [ presetEdge, {
-      target: targetModern ? "node8" : "node6",
-      env: "production",
-      compression: minified,
-      modules: false,
-      debug: DEBUG_PRESETS
-    }]
+    selectedPreset = [
+      presetEdge,
+      {
+        target: targetModern ? "node8" : "node6",
+        env: "production",
+        compression: minified,
+        modules: false,
+        debug: DEBUG_PRESETS
+      }
+    ]
   } else {
-    selectedPreset = [ presetEdge, {
-      target: "library",
-      env: "production",
-      compression: minified,
-      debug: DEBUG_PRESETS
-    }]
+    selectedPreset = [
+      presetEdge,
+      {
+        target: "library",
+        env: "production",
+        compression: minified,
+        debug: DEBUG_PRESETS
+      }
+    ]
   }
 
   return babel({
@@ -60,10 +78,7 @@ export function createHelper({ mode = "classic", minified = false, presets = [],
 
     // Do not transpile external code
     // https://github.com/rollup/rollup-plugin-babel/issues/48#issuecomment-211025960
-    exclude: [
-      "node_modules/**",
-      "**/*.json"
-    ],
+    exclude: [ "node_modules/**", "**/*.json" ],
 
     presets: [
       selectedPreset,
