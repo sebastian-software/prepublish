@@ -20,7 +20,6 @@ export function createHelper({
       presetEdge,
       {
         target: "modern",
-        env: "production",
         compression: minified,
         debug: DEBUG_PRESETS
       }
@@ -30,7 +29,6 @@ export function createHelper({
       presetEdge,
       {
         target: "es2015",
-        env: "production",
         compression: minified,
         debug: DEBUG_PRESETS
       }
@@ -40,7 +38,6 @@ export function createHelper({
       presetEdge,
       {
         target: targetModern ? "node8" : "node6",
-        env: "production",
         compression: minified,
         modules: false,
         debug: DEBUG_PRESETS
@@ -51,7 +48,6 @@ export function createHelper({
       presetEdge,
       {
         target: "library",
-        env: "production",
         compression: minified,
         debug: DEBUG_PRESETS
       }
