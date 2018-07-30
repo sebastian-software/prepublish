@@ -23,6 +23,9 @@
   "bin": {
     "prepublish": "./bin/prepublish"
   },
+  "files": [
+    "bin"
+  ],
   "author": {
     "name": "Sebastian Werner",
     "email": "s.werner@sebastian-software.de",
