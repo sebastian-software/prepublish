@@ -314,6 +314,7 @@ function bundleTo({
       return dependency.charAt(0) !== "."
     },
     plugins: [
+      fileRebase,
       nodeResolve({
         extensions: [ ".mjs", ".js", ".jsx", ".ts", ".tsx", ".json" ],
         jsnext: true,
@@ -327,7 +328,6 @@ function bundleTo({
       yamlPlugin(),
       jsonPlugin(),
       currentTranspiler,
-      fileRebase,
       transpilerId === "binary" ? executablePlugin() : null
     ].filter(Boolean)
   })
