@@ -15,7 +15,7 @@ import yamlPlugin from "rollup-plugin-yaml"
 import replacePlugin from "rollup-plugin-replace"
 import executablePlugin from "rollup-plugin-executable"
 
-import getTranspilers from "./getTranspilers"
+import createBabelConfig from "./createBabelConfig"
 import getBanner from "./getBanner"
 
 const ROOT = getRoot()
@@ -37,7 +37,6 @@ const command = meow(
 
     --output-folder    Configure the output folder [default = auto]
 
-    -t, --transpiler   Chose the transpiler to use. Either "babel" or "buble". [default = babel]
     -x, --minified     Enabled minification of output files
     -m, --sourcemap    Create a source map file during processing
 
@@ -62,11 +61,6 @@ const command = meow(
 
       outputFolder: {
         default: null
-      },
-
-      transpiler: {
-        default: "babel",
-        alias: "t"
       },
 
       minified: {
@@ -217,7 +211,7 @@ try {
       eachOfSeries(
         formats,
         (format, formatIndex, formatCallback) => {
-          const transpilers = getTranspilers(command.flags.transpiler, {
+          const configs = createBabelConfig({
             minified: command.flags.minified,
             presets: [],
             plugins: [],
@@ -225,7 +219,7 @@ try {
           })
 
           eachOfSeries(
-            transpilers,
+            configs,
             (currentTranspiler, transpilerId, variantCallback) => {
               const outputFile = outputFileMatrix[`${targetId}-${transpilerId}-${format}`]
               if (outputFile) {
