@@ -294,7 +294,7 @@ function bundleTo({
     [`${prefix}TARGET`]: JSON.stringify(targetId)
   }
 
-  const fileRebase = rebase({ outputFolder: dirname(outputFile), input, verbose })
+  const fileRebase = rebase({ verbose })
   return rollup({
     input,
     cache,
@@ -302,12 +302,8 @@ function bundleTo({
       console.warn(chalk.red(`  - ${  error.message}`))
     },
     external(dependency) {
-      if (dependency == input) {
+      if (dependency === input) {
         return false
-      }
-
-      if (fileRebase.isExternal(dependency)) {
-        return true
       }
 
       if (isAbsolute(dependency)) {
