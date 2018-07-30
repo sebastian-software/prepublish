@@ -4,7 +4,7 @@ var path = require("path")
 
 module.exports = {
   context: path.resolve(__dirname, "lib"),
-  entry: "./node.classic.esmodule.js",
+  entry: "./node.es5.esm.js",
   target: "node",
   devtool: "source-map",
   stats: "errors-only",

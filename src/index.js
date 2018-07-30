@@ -9,7 +9,7 @@ import { get as getRoot } from "app-root-dir"
 import { rollup } from "rollup"
 import rebase from "rollup-plugin-rebase"
 import nodeResolve from "rollup-plugin-node-resolve"
-import commonjs from "rollup-plugin-commonjs"
+import cjsPlugin from "rollup-plugin-commonjs"
 import jsonPlugin from "rollup-plugin-json"
 import yamlPlugin from "rollup-plugin-yaml"
 import replacePlugin from "rollup-plugin-replace"
@@ -40,6 +40,7 @@ const command = meow(
     -t, --transpiler   Chose the transpiler to use. Either "babel" or "buble". [default = babel]
     -x, --minified     Enabled minification of output files
     -m, --sourcemap    Create a source map file during processing
+
     --target-modern    Binaries should target Node v8 LTS instead of Node v6 LTS.
 
     -v, --verbose      Verbose output mode [default = false]
@@ -115,57 +116,51 @@ if (binaryConfig) {
 
 /* eslint-disable dot-notation */
 const outputFileMatrix = {
-  // NodeJS Classic Target
-  "node-classic-commonjs": PKG_CONFIG["main"] || null,
-  "node-classic-esmodule": PKG_CONFIG["module"] || PKG_CONFIG["jsnext:main"] || null,
+  // NodeJS es5 Target
+  "node-es5-cjs": PKG_CONFIG["main"] || null,
+  "node-es5-esm": PKG_CONFIG["module"] || PKG_CONFIG["jsnext:main"] || null,
 
   // NodeJS ES2015 Target
-  "node-es2015-commonjs": PKG_CONFIG["main:es2015"] || null,
-  "node-es2015-esmodule": PKG_CONFIG["es2015"] || PKG_CONFIG["module:es2015"] || null,
+  "node-es2015-cjs": PKG_CONFIG["main:es2015"] || null,
+  "node-es2015-esm": PKG_CONFIG["es2015"] || PKG_CONFIG["module:es2015"] || null,
 
   // NodeJS Modern Target
-  "node-modern-commonjs": PKG_CONFIG["main:modern"] || null,
-  "node-modern-esmodule": PKG_CONFIG["module:modern"] || null,
+  "node-modern-cjs": PKG_CONFIG["main:modern"] || null,
+  "node-modern-esm": PKG_CONFIG["module:modern"] || null,
 
-  // Browser Classic Target
-  "web-classic-esmodule": PKG_CONFIG["web"] || PKG_CONFIG["browser"] || null,
+  // Browser es5 Target
+  "web-es5-esm": PKG_CONFIG["web"] || PKG_CONFIG["browser"] || null,
 
   // Browser ES2015 Target
-  "web-es2015-esmodule": PKG_CONFIG["web:es2015"] || PKG_CONFIG["browser:es2015"] || null,
+  "web-es2015-esm": PKG_CONFIG["web:es2015"] || PKG_CONFIG["browser:es2015"] || null,
 
   // Browser Modern Target
-  "web-modern-esmodule": PKG_CONFIG["web:modern"] || PKG_CONFIG["browser:modern"] || null,
+  "web-modern-esm": PKG_CONFIG["web:modern"] || PKG_CONFIG["browser:modern"] || null,
 
   // Binary Target
-  "binary-binary-commonjs": binaryOutput || null
+  "binary-binary-cjs": binaryOutput || null
 }
 
 const outputFolder = command.flags.outputFolder
 if (outputFolder) {
-  outputFileMatrix["node-classic-commonjs"] = `${outputFolder}/node.classic.commonjs.js`
-  outputFileMatrix["node-classic-esmodule"] = `${outputFolder}/node.classic.esmodule.js`
+  outputFileMatrix["node-es5-cjs"] = `${outputFolder}/node.es5.cjs.js`
+  outputFileMatrix["node-es5-esm"] = `${outputFolder}/node.es5.esm.js`
 
-  outputFileMatrix["node-es2015-commonjs"] = `${outputFolder}/node.es2015.commonjs.js`
-  outputFileMatrix["node-es2015-esmodule"] = `${outputFolder}/node.es2015.esmodule.js`
+  outputFileMatrix["node-es2015-cjs"] = `${outputFolder}/node.es2015.cjs.js`
+  outputFileMatrix["node-es2015-esm"] = `${outputFolder}/node.es2015.esm.js`
 
-  outputFileMatrix["node-modern-commonjs"] = `${outputFolder}/node.modern.commonjs.js`
-  outputFileMatrix["node-modern-esmodule"] = `${outputFolder}/node.modern.esmodule.js`
+  outputFileMatrix["node-modern-cjs"] = `${outputFolder}/node.modern.cjs.js`
+  outputFileMatrix["node-modern-esm"] = `${outputFolder}/node.modern.esm.js`
 
-  outputFileMatrix["web-classic-esmodule"] = `${outputFolder}/web.classic.esmodule.js`
-  outputFileMatrix["web-es2015-esmodule"] = `${outputFolder}/web.es2015.esmodule.js`
-  outputFileMatrix["web-modern-esmodule"] = `${outputFolder}/web.modern.esmodule.js`
-}
-
-// Rollups support these formats: 'amd', 'cjs', 'es', 'iife', 'umd'
-const format2Rollup = {
-  commonjs: "cjs",
-  esmodule: "es"
+  outputFileMatrix["web-es5-esm"] = `${outputFolder}/web.es5.esm.js`
+  outputFileMatrix["web-es2015-esm"] = `${outputFolder}/web.es2015.esm.js`
+  outputFileMatrix["web-modern-esm"] = `${outputFolder}/web.modern.esm.js`
 }
 
 const name = PKG_CONFIG.name || camelCase(PKG_CONFIG.name)
 const banner = getBanner(PKG_CONFIG)
 const targets = {}
-const formats = [ "esmodule", "commonjs" ]
+const formats = [ "esm", "cjs" ]
 
 if (command.flags.inputNode) {
   targets.node = [ command.flags.inputNode ]
@@ -294,12 +289,12 @@ function bundleTo({
     [`${prefix}TARGET`]: JSON.stringify(targetId)
   }
 
-  const fileRebase = rebase({ verbose })
+  const rebasePlugin = rebase({ verbose })
   return rollup({
     input,
     cache,
     onwarn: (error) => {
-      console.warn(chalk.red(`  - ${  error.message}`))
+      console.warn(chalk.red(`  - ${error.message}`))
     },
     external(dependency) {
       if (dependency === input) {
@@ -308,13 +303,13 @@ function bundleTo({
 
       if (isAbsolute(dependency)) {
         const relativePath = relative(ROOT, dependency)
-        return Boolean(/node_modules/.exec(relativePath))
+        return Boolean((/node_modules/).exec(relativePath))
       }
 
       return dependency.charAt(0) !== "."
     },
     plugins: [
-      fileRebase,
+      rebasePlugin,
       nodeResolve({
         extensions: [ ".mjs", ".js", ".jsx", ".ts", ".tsx", ".json" ],
         jsnext: true,
@@ -322,7 +317,7 @@ function bundleTo({
         main: true
       }),
       replacePlugin(variables),
-      commonjs({
+      cjsPlugin({
         include: "node_modules/**"
       }),
       yamlPlugin(),
@@ -333,7 +328,7 @@ function bundleTo({
   })
     .then((bundle) =>
       bundle.write({
-        format: format2Rollup[format],
+        format,
         name,
         banner: transpilerId === "binary" ? `#!/usr/bin/env node\n\n${banner}` : banner,
         sourcemap: command.flags.sourcemap,
