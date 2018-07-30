@@ -2,25 +2,23 @@
 
 *Prepublish* is a solution for simplifying pre-publishing typical JavaScript projects for publishing to NPM.
 
-[sponsor-img]: https://img.shields.io/badge/Sponsored%20by-Sebastian%20Software-692446.svg
 [sponsor]: https://www.sebastian-software.de
 [deps]: https://david-dm.org/sebastian-software/prepublish
-[deps-img]: https://david-dm.org/sebastian-software/prepublish.svg
 [npm]: https://www.npmjs.com/package/prepublish
-[npm-downloads-img]: https://img.shields.io/npm/dm/prepublish.svg
-[npm-version-img]: https://img.shields.io/npm/v/prepublish.svg
-[travis-img]: https://img.shields.io/travis/sebastian-software/prepublish/master.svg?branch=master&label=unix%20build
-[appveyor-img]: https://img.shields.io/appveyor/ci/swernerx/prepublish/master.svg?label=windows%20build
 [travis]: https://travis-ci.org/sebastian-software/prepublish
 [appveyor]: https://ci.appveyor.com/project/swernerx/prepublish/branch/master
+
+[sponsor-img]: https://badgen.net/badge/Sponsored%20by/Sebastian%20Software/692446
+[deps-img]: https://badgen.net/david/dep/sebastian-software/prepublish
+[npm-downloads-img]: https://badgen.net/npm/dm/prepublish
+[npm-version-img]: https://badgen.net/npm/v/prepublish
+[travis-img]: https://badgen.net/travis/sebastian-software/prepublish?label=unix%20build
+[appveyor-img]: https://badgen.net/appveyor/ci/swernerx/prepublish?label=windows%20build
 
 
 ## Transpilers
 
-*Prepublish* includes two transpiler configurations:
-
-- **[Buble](https://buble.surge.sh/guide/)**: Blazing fast ES2015+ transpiler where the goal is to have lightweight runtime code, too.
-- **[Babel](https://babeljs.io/docs/plugins/preset-latest/)**: Configuration of Babel transpiler. Supports all of ES2015/ES2016/ES2017. Plus some ES3 helpers for maximum engine compatibility. Plus Support for [Object-Rest-Spread](https://babeljs.io/docs/plugins/transform-object-rest-spread/) and [Class Properties](https://babeljs.io/docs/plugins/transform-class-properties/). The High-performance async engine with support for generators and async/await powered by [fast-async](https://github.com/MatAtBread/fast-async) is enabled by default. It requires [nodent-runtime](https://github.com/MatAtBread/nodent-runtime). Uses [Transform-Runtime](https://github.com/babel/babel/tree/master/packages/babel-plugin-transform-runtime) to externalize requirements to Polyfills. Resulting code needs all Polyfills for each library published with this tool. Typically by using services like [polyfill.io](https://qa.polyfill.io/v2/docs/) or [Babel Runtime](https://github.com/babel/babel/tree/master/packages/babel-runtime) aka [CoreJS](https://github.com/zloirock/core-js).
+*Prepublish* relies on the [Babel Preset Edge](https://www.npmjs.com/package/babel-preset-edge) for producing forward-looking optimistic code for your code base.
 
 
 ## Output Targets
@@ -30,15 +28,15 @@ building for *CommonJS* and well as with ES Modules (ESM). Just add the relevant
 the configuration.
 
 - CommonJS Output: `main`
-- ES Module Output: `module`
+- ESM Output: `module`
 
 Basic Example:
 
 ```json
 {
   "name": "mypackage",
-  "main": "lib/main-cjs.js",
-  "module": "lib/main-esm.js"
+  "main": "lib/main.cjs.js",
+  "module": "lib/main.esm.js"
 }
 ```
 
@@ -49,9 +47,9 @@ Example:
 ```json
 {
   "name": "mypackage",
-  "main": "lib/main-cjs.js",
-  "module": "lib/main-esm.js",
-  "browser": "lib/main-browser.js"
+  "main": "lib/main.cjs.js",
+  "module": "lib/main.esm.js",
+  "browser": "lib/main.browser.js"
 }
 ```
 
@@ -114,9 +112,9 @@ Example Configuration:
   "main": "lib/main-cjs.js",
   "module": "lib/main-esm.js",
   "browser": "lib/main-browser.js",
-  "main:es2015": "lib/main-cjs-es2015.js",
-  "module:es2015": "lib/main-esm-es2015.js",
-  "browser:es2015": "lib/main-browser-es2015.js"
+  "main:es2015": "lib/main.cjs.es2015.js",
+  "module:es2015": "lib/main.esm.es2015.js",
+  "browser:es2015": "lib/main.browser.es2015.js"
 }
 ```
 
@@ -201,9 +199,9 @@ Options
 
   --output-folder    Configure the output folder [default = auto]
 
-  -t, --transpiler   Chose the transpiler to use. Either "babel" or "buble". [default = babel]
   -x, --minified     Enabled minification of output files
   -m, --sourcemap    Create a source map file during processing
+
   --target-modern    Binaries should target Node v8 LTS instead of Node v6 LTS.
 
   -v, --verbose      Verbose output mode [default = false]
