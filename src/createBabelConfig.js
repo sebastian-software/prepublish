@@ -1,8 +1,6 @@
 import babel from "rollup-plugin-babel"
 import presetEdge from "babel-preset-edge"
 
-const DEBUG_PRESETS = false
-
 /* eslint-disable max-params */
 export function createHelper({
   mode = "classic",
@@ -20,8 +18,7 @@ export function createHelper({
       presetEdge,
       {
         target: "modern",
-        compression: minified,
-        debug: DEBUG_PRESETS
+        compression: minified
       }
     ]
   } else if (mode === "es2015") {
@@ -29,8 +26,7 @@ export function createHelper({
       presetEdge,
       {
         target: "es2015",
-        compression: minified,
-        debug: DEBUG_PRESETS
+        compression: minified
       }
     ]
   } else if (mode === "binary") {
@@ -39,8 +35,7 @@ export function createHelper({
       {
         target: targetModern ? "node8" : "node6",
         compression: minified,
-        modules: false,
-        debug: DEBUG_PRESETS
+        modules: false
       }
     ]
   } else {
@@ -48,8 +43,7 @@ export function createHelper({
       presetEdge,
       {
         target: "library",
-        compression: minified,
-        debug: DEBUG_PRESETS
+        compression: minified
       }
     ]
   }
