@@ -1,10 +1,13 @@
-import buble from "rollup-plugin-buble"
-import json from "rollup-plugin-json"
-import executable from "rollup-plugin-executable"
+import babel from "rollup-plugin-babel"
 import builtinModules from "builtin-modules"
+import executable from "rollup-plugin-executable"
+import json from "rollup-plugin-json"
 
-var pkg = require('./package.json')
-var external = Object.keys(pkg.dependencies).concat(builtinModules)
+process.env.NODE_ENV = "production"
+
+/* eslint-disable-next-line import/no-commonjs */
+const pkg = require("./package.json")
+const external = Object.keys(pkg.dependencies).concat(builtinModules)
 
 export default {
   input: "src/index.js",
@@ -17,8 +20,8 @@ export default {
   external,
   plugins: [
     json(),
-    buble({
-      objectAssign: "Object.assign"
+    babel({
+      runtimeHelpers: true
     }),
     executable()
   ]
