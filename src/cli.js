@@ -291,25 +291,12 @@ function bundleTo({
       console.warn(chalk.red(`  - ${error.message}`))
     },
     external(dependency) {
-      if (dependency === input) {
-        return false
-      }
-
-      if (isAbsolute(dependency)) {
-        const relativePath = relative(ROOT, dependency)
-        return Boolean((/node_modules/).exec(relativePath))
-      }
-
-      return dependency.charAt(0) !== "."
+      // Very simple externalization:
+      // We exclude all files from NodeJS resolve basically which are not relative to current file.
+      return dependency !== input && !(/^[./\\]/).exec(dependency)
     },
     plugins: [
       rebasePlugin,
-      nodeResolve({
-        extensions: [ ".mjs", ".js", ".jsx", ".ts", ".tsx", ".json" ],
-        jsnext: true,
-        module: true,
-        main: true
-      }),
       replacePlugin(variables),
       cjsPlugin({
         include: "node_modules/**"
