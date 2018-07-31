@@ -248,6 +248,10 @@ function lookupBest(candidates) {
   return filtered[0]
 }
 
+function isRelative(dependency) {
+  return (/^\./).exec(dependency)
+}
+
 function bundleTo({
   input,
   targetId,
@@ -285,9 +289,10 @@ function bundleTo({
     external(dependency) {
       // Very simple externalization:
       // We exclude all files from NodeJS resolve basically which are not relative to current file.
-      const result = dependency !== input && !(/^[./\\]/).exec(dependency)
-      console.log(dependency, result)
-      return result
+      // We also bundle absolute paths, these are just an intermediate step in rollup resolving files and
+      // as we do not support resolving from node_modules (we never bundle these) we only hit this code
+      // path for originally local dependencies.
+      return !(dependency === input || isRelative(dependency) || isAbsolute(dependency))
     },
     plugins: [
       rebasePlugin,
