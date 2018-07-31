@@ -285,7 +285,9 @@ function bundleTo({
     external(dependency) {
       // Very simple externalization:
       // We exclude all files from NodeJS resolve basically which are not relative to current file.
-      return dependency !== input && !(/^[./\\]/).exec(dependency)
+      const result = dependency !== input && !(/^[./\\]/).exec(dependency)
+      console.log(dependency, result)
+      return result
     },
     plugins: [
       rebasePlugin,
