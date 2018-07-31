@@ -48,7 +48,7 @@
     "@babel/runtime": "^7.0.0-beta.55",
     "app-root-dir": "^1.0.2",
     "async": "^2.6.1",
-    "babel-preset-edge": "^4.9.4",
+    "babel-preset-edge": "^4.9.5",
     "chalk": "^2.4.1",
     "core-js": "^2.5.7",
     "file-exists": "^5.0.1",
