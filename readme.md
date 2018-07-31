@@ -129,7 +129,7 @@ Additionally `prepublish` is capable in generating for binary targets.
 
 This generates a `mypackage` binary which is generated from the matching source file.
 
-Binaries are generally generated from one of these source files:
+Binaries are generated from one of these source files:
 
 - `src/cli.js`
 - `src/binary.js`
@@ -146,11 +146,18 @@ Example Configuration:
 }
 ```
 
-### Choosing NodeJS v8 Binaries
+Prepublish automatically choses the matching NodeJS version from your `engines` configuration:
 
-There is a new option to explicitely target Node v8 when generating binaries. This is controlled via the following command line argument:
+```json
+"engines": {
+  "node": ">=6.0.0",
+  "npm": ">=5.0.0",
+  "yarn": ">=1.0.0"
+}
+```
 
-Use `prepublish --target-modern` together with the `bin` entry for `package.json` as seen before.
+inside your `package.json`. This example configuration targets any version of NodeJS matching at least the v6 capabilities.
+
 
 
 

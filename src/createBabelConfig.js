@@ -6,8 +6,7 @@ export function createHelper({
   mode = "classic",
   minified = false,
   presets = [],
-  plugins = [],
-  targetModern = false
+  plugins = []
 }) {
   const additionalPlugins = plugins.concat()
   const additionalPresets = presets.concat()
@@ -33,7 +32,7 @@ export function createHelper({
     selectedPreset = [
       presetEdge,
       {
-        target: targetModern ? "node8" : "node6",
+        target: "node",
         compression: minified,
         modules: false
       }

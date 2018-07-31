@@ -40,8 +40,6 @@ const command = meow(
     -x, --minified     Enabled minification of output files
     -m, --sourcemap    Create a source map file during processing
 
-    --target-modern    Binaries should target Node v8 LTS instead of Node v6 LTS.
-
     -v, --verbose      Verbose output mode [default = false]
     -q, --quiet        Quiet output mode [default = false]
 `,
@@ -73,10 +71,6 @@ const command = meow(
         alias: "m"
       },
 
-      targetModern: {
-        default: false
-      },
-
       verbose: {
         default: false,
         alias: "v"
@@ -92,7 +86,6 @@ const command = meow(
 
 const verbose = command.flags.verbose
 const quiet = command.flags.quiet
-const targetModern = command.flags.targetModern
 
 if (verbose) {
   console.log("Flags:", command.flags)
@@ -214,8 +207,7 @@ try {
           const configs = createBabelConfig({
             minified: command.flags.minified,
             presets: [],
-            plugins: [],
-            targetModern
+            plugins: []
           })
 
           eachOfSeries(
